@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+  web_app:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8765
+    volumes:
+      - ./yesno_integration/:/usr/src/app/
+      - ./media/:/usr/src/media/
+    ports:
+      - "8765:8765"
+    env_file:
+      - ./.env.dev
+    depends_on:
+        - db
+
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=yesno_psg
+      - POSTGRES_PASSWORD=yesno_psg
+      - POSTGRES_DB=yesno_psg
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
